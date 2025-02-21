@@ -23,8 +23,8 @@ List<String> processOre(List<String> ore) {
 
   List<String> parts = [];
   for (String oreString in ore) {
-    for (int i = 0; i < oreString.length - 1; i++) {
-      if (oreString[i] == '*' && oreString[i + 1] == '.') {
+    for (int i = 0; i < oreString.length; i++) {
+      if (i < oreString.length - 1 && oreString[i] == '*' && oreString[i + 1] == '.') {
         parts.add('_');
         i++;
       } else if (oreString[i] == ':') {
@@ -34,7 +34,7 @@ List<String> processOre(List<String> ore) {
   }
 
   if (parts.isEmpty) {
-    throw 'Руди не хватило на делаті(';
+    throw 'Руди не хватило на деталі(';
   }
 
   return parts;
@@ -47,7 +47,7 @@ List<String> createSmartphones(List<String> parts) {
   int possiblePhones = min(underscoreCount, colonCount ~/ 2);
 
   if (possiblePhones == 0) {
-    throw 'Недостатньо детелей для навіть для одного смартфону(';
+    throw 'Недостатньо деталей навіть для одного смартфону(';
   }
 
   List<String> smartphones = [];
