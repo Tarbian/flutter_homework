@@ -1,9 +1,9 @@
 import 'package:test/test.dart';
-import 'dart:math';
+import '../task3.dart';
 
 void main() {
-  group('Тести функції processOre', () {
-    test('Повертає порожній список, якщо руда не містить компонентів', () {
+  group('Tests for processOre function', () {
+    test('Returns an empty list if ore contains no components', () {
       List<String> ore = [
         '............',
         '............',
@@ -14,7 +14,7 @@ void main() {
       expect(result, isEmpty);
     });
 
-    test('Повертає правильні компоненти з руди', () {
+    test('Returns correct components from ore', () {
       List<String> ore = [
         '.::::..::.....::',
         '.::::..::.....::',
@@ -26,15 +26,15 @@ void main() {
       expect(result.where((part) => part == '|').length, greaterThan(0));
     });
 
-    test('Викидає виняток, якщо руда порожня', () {
+    test('Throws an exception if ore is empty', () {
       List<String> ore = [];
 
-      expect(() => processOre(ore), throwsA('Де руда?'));
+      expect(() => processOre(ore), throwsA('Where is the ore?'));
     });
   });
 
-  group('Тести функції createSmartphones', () {
-    test('Створює правильну кількість смартфонів з компонентів', () {
+  group('Tests for createSmartphones function', () {
+    test('Creates the correct number of smartphones from components', () {
       List<String> parts = ['|', '|', '|', '|', '|', '|', '_', '_', '_'];
 
       List smartphones = createSmartphones(parts);
@@ -43,23 +43,21 @@ void main() {
       expect(smartphones, equals(['|_|', '|_|', '|_|']));
     });
 
-    test('Викидає виняток, якщо недостатньо компонентів', () {
+    test('Throws an exception if there are not enough components', () {
       List<String> parts = ['|', '_'];
 
       expect(() => createSmartphones(parts),
-          throwsA('Недостатньо детелей для навіть для одного смартфону('));
+          throwsA('Not enough parts even for one smartphone('));
     });
 
-    test('Викидає виняток, якщо немає компонентів', () {
+    test('Throws an exception if there are no components', () {
       List<String> parts = [];
 
       expect(() => createSmartphones(parts),
-          throwsA('Недостатньо детелей для навіть для одного смартфону('));
+          throwsA('Not enough parts even for one smartphone('));
     });
 
-    test(
-        'Створює максимально можливу кількість смартфонів з наявних компонентів',
-        () {
+    test('Creates the maximum possible number of smartphones from available components', () {
       List<String> parts = ['|', '|', '|', '|', '|', '|', '_', '_'];
 
       List smartphones = createSmartphones(parts);
@@ -67,8 +65,9 @@ void main() {
       expect(smartphones.length, equals(2));
     });
   });
-  group('Інтеграційні тести', () {
-    test('Повний процес від руди до смартфонів працює коректно', () {
+
+  group('Integration tests', () {
+    test('The full process from ore to smartphones works correctly', () {
       List<String> ore = [
         '::*::*::*::*::*:',
         '::*::*::*::*::*:',
@@ -76,63 +75,19 @@ void main() {
       ];
 
       List<String> parts = processOre(ore);
-      expect(parts.isNotEmpty, isTrue, reason: 'Частини повинні бути знайдені');
+      expect(parts.isNotEmpty, isTrue, reason: 'Parts should be found');
 
       List smartphones = createSmartphones(parts);
 
       expect(smartphones.length, greaterThan(0),
-          reason: 'Має бути створено хоча б один смартфон');
+          reason: 'At least one smartphone should be created');
       expect(smartphones.every((phone) => phone == '|_|'), isTrue);
     });
 
-    test('Обробляє виняток при відсутності руди', () {
+    test('Handles exception when ore is missing', () {
       List<String> ore = [];
 
-      expect(() => processOre(ore), throwsA(equals('Де руда?')));
+      expect(() => processOre(ore), throwsA(equals('Where is the ore?')));
     });
   });
-}
-
-List<String> processOre(List<String> ore) {
-  if (ore.isEmpty) {
-    throw 'Де руда?';
-  }
-
-  List<String> parts = [];
-  int oneThirdOfUnderscore = 0;
-
-  for (String oreString in ore) {
-    for (int i = 0; i < oreString.length - 1; i++) {
-      if (oreString[i] == '*' && oreString[i + 1] == '.') {
-        oneThirdOfUnderscore++;
-        if (oneThirdOfUnderscore == 3) {
-          parts.add('_');
-          oneThirdOfUnderscore = 0;
-        }
-        i++;
-      } else if (oreString[i] == ':') {
-        parts.add('|');
-      }
-    }
-  }
-
-  return parts;
-}
-
-List<String> createSmartphones(List<String> parts) {
-  int underscoreCount = parts.where((part) => part == '_').length;
-  int colonCount = parts.where((part) => part == '|').length;
-
-  int possiblePhones = min(underscoreCount, colonCount ~/ 2);
-
-  if (possiblePhones == 0) {
-    throw 'Недостатньо детелей для навіть для одного смартфону(';
-  }
-
-  List<String> smartphones = [];
-  for (int i = 0; i < possiblePhones; i++) {
-    smartphones.add('|_|');
-  }
-
-  return smartphones;
 }

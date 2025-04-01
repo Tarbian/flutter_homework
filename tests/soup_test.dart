@@ -1,8 +1,9 @@
 import 'package:test/test.dart';
+import '../task4.dart';
 
 void main() {
-  group('Тестування функцій супів', () {
-    test('Аналіз популярності супів працює коректно', () {
+  group('Testing soup functions', () {
+    test('Soup popularity analysis works correctly', () {
       List<List<int>> soupChoices = [
         [1, 2, 3],
         [1, 2],
@@ -13,26 +14,26 @@ void main() {
 
       Map<int, int> result = analyzeSoupPopularity(soupChoices);
 
-      expect(result[1], equals(3)); // Суп 1 вибрали 3 рази
-      expect(result[3], equals(4)); // Суп 3 вибрали 4 рази
-      expect(result[5], equals(2)); // Суп 5 вибрали 2 рази
+      expect(result[1], equals(3)); // Soup 1 was chosen 3 times
+      expect(result[3], equals(4)); // Soup 3 was chosen 4 times
+      expect(result[5], equals(2)); // Soup 5 was chosen 2 times
     });
 
-    test('Коректно вибирає кількість днів', () {
-      int input = getValidIntInputMock('Введіть кількість днів (1-30):',
-          'Некоректне число. Спробуйте ще раз:', 1, 30, 10);
+    test('Correctly selects the number of days', () {
+      int input = getValidIntInputMock('Enter the number of days (1-30):',
+          'Invalid number. Please try again:', 1, 30, 10);
       expect(input, inInclusiveRange(1, 30));
     });
 
-    test('Фільтрує та повертає коректні номери супів', () {
+    test('Filters and returns correct soup numbers', () {
       List<int> soups = getValidSoupNumbersMock(
-          'Введіть номери супів через пробіл (1-7):',
-          'Будь ласка, введіть коректні номери супів (1-7):',
+          'Enter soup numbers separated by space (1-7):',
+          'Please enter valid soup numbers (1-7):',
           [2, 5, 7]);
       expect(soups.every((num) => num >= 1 && num <= 7), isTrue);
     });
 
-    test('Обробляє популярні супи правильно', () {
+    test('Handles popularity soups correctly', () {
       Map<int, int> soupCount = {1: 5, 2: 3, 3: 7, 4: 2};
       List<MapEntry<int, int>> sortedSoups = soupCount.entries.toList();
       sortedSoups.sort((a, b) => b.value.compareTo(a.value));
@@ -56,16 +57,4 @@ List<int> getValidSoupNumbersMock(
     return mockInput;
   }
   throw ArgumentError(errorMessage);
-}
-
-Map<int, int> analyzeSoupPopularity(List<List<int>> soupChoices) {
-  Map<int, int> soupCount = {};
-
-  for (var dayChoices in soupChoices) {
-    for (var soup in dayChoices) {
-      soupCount[soup] = (soupCount[soup] ?? 0) + 1;
-    }
-  }
-
-  return soupCount;
 }

@@ -3,6 +3,11 @@ import 'dart:io';
 const obstaclesPassToWin = 2;
 const jumpFrames = 2;
 const frameTime = 800;
+const obstaclePositions = [4, 10];
+const scneneLength = 15;
+const obstacleChar = 'c';
+const groundChar = '_';
+const godzillaChar = '0';
 
 void main() {
   print('GO GO GODZILA');
@@ -12,78 +17,36 @@ void main() {
   bool isJumping = false;
   int jumpFramesLeft = 0;
   int obstaclesPassed = 0;
-  
-  List<int> obstaclePositions = [4, 10];
   int gamePosition = 0;
-  
+
   while (!isGameOver) {
-    if (isJumping) {
-      String scene = '0\n';
-      
-      for (int i = 0; i < 15; i++) {
-        bool hasObstacle = false;
-        for (int pos in obstaclePositions) {
-          if ((pos - gamePosition) % 15 == i) {
-            hasObstacle = true;
-            break;
-          }
-        }
-        scene += hasObstacle ? 'с' : '_';
-      }
-      print(scene);
-    } else {
-      String scene = '0';
-      
-      for (int i = 0; i < 15; i++) {
-        bool hasObstacle = false;
-        for (int pos in obstaclePositions) {
-          if ((pos - gamePosition) % 15 == i) {
-            hasObstacle = true;
-            break;
-          }
-        }
-        scene += hasObstacle ? 'с' : '_';
-      }
-      print(scene);
-    }
-    
-    bool collisionDetected = false;
-    for (int pos in obstaclePositions) {
-      if ((pos - gamePosition) % 15 == 0 && !isJumping) {
-        collisionDetected = true;
-        break;
-      }
-    }
-    
-    if (collisionDetected) {
+    renderScene(gamePosition, isJumping);
+
+    if (checkCollision(gamePosition, isJumping)) {
       isGameOver = true;
       print(':(____с____');
       print('NO NO GODZILA :(:(:(:(:(:(:(');
       break;
     }
-    
-    for (int pos in obstaclePositions) {
-      if ((pos - gamePosition) % 15 == 0) {
-        obstaclesPassed++;
-        if (obstaclesPassed >= obstaclesPassToWin) {
-          print('YO YO GODZILA :):):):):):):)');
-          isGameOver = true;
-          break;
-        }
+
+    if (checkObstaclesPassed(gamePosition)) {
+      obstaclesPassed++;
+      if (obstaclesPassed >= obstaclesPassToWin) {
+        print('YO YO GODZILA :):):):):):):)');
+        isGameOver = true;
+        break;
       }
     }
-    
-    if (isGameOver) break;
-    
+
     if (isJumping) {
       jumpFramesLeft--;
       if (jumpFramesLeft <= 0) {
         isJumping = false;
         jumpFramesLeft = 0;
       }
-      
+
       gamePosition++;
-      
+
       sleep(Duration(milliseconds: frameTime));
       print('* * * * * * * * * * *');
       continue;
@@ -91,13 +54,39 @@ void main() {
 
     print('Jump? (+ for yes, - for no)');
     String? input = stdin.readLineSync();
-    
+
     if (input == '+') {
       isJumping = true;
       jumpFramesLeft = jumpFrames;
     }
-    
+
     gamePosition++;
     print('* * * * * * * * * * *');
   }
+}
+
+void renderScene(int gamePosition, bool isJumping) {
+  String playerChar = isJumping ? '${godzillaChar}\n' : godzillaChar;
+  String scene = playerChar;
+
+  for (int i = 0; i < scneneLength; i++) {
+    bool hasObstacle = obstaclePositions
+        .any((pos) => (pos - gamePosition) % scneneLength == i);
+    scene += hasObstacle ? obstacleChar : groundChar;
+  }
+
+  print(scene);
+}
+
+bool checkCollision(int gamePosition, bool isJumping) {
+  if (isJumping) {
+    return false;
+  }
+
+  return checkObstaclesPassed(gamePosition);
+}
+
+bool checkObstaclesPassed(int gamePosition) {
+  return obstaclePositions
+      .any((pos) => (pos - gamePosition) % scneneLength == 0);
 }
