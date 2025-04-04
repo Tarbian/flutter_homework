@@ -3,33 +3,31 @@ import 'dart:math';
 const int maxClanMembers = 4;
 const int winReward = 50000;
 const int bossWinChance = 65;
-const List<String> roles = ['boss', 'member'];
+
+enum Role { boss, member }
 
 class Mafiosnic {
   final String name;
-  final String role; // 'boss' / 'member'
+  final Role role;
 
   Mafiosnic(this.name, this.role) {
     if (name.isEmpty) {
       throw ArgumentError('Name can not be empty!');
     }
-    if (!roles.contains(role)) { 
-      throw ArgumentError('Role must be "boss" or "member"!');
-    }
   }
 
   bool fight(Mafiosnic opponent) {
-    if (role == 'boss' && opponent.role == 'member') {
+    if (role == Role.boss && opponent.role == Role.member) {
       return Random().nextInt(100) < bossWinChance;
     }
-    if (opponent.role == 'boss' && role == 'member') {
+    if (opponent.role == Role.boss && role == Role.member) {
       return Random().nextInt(100) < (100 - bossWinChance);
     }
     return Random().nextBool();
   }
 
   @override
-  String toString() => "$name ($role)";
+  String toString() => "$name (${role.name})";
 }
 
 class MafiaClan {
@@ -41,7 +39,7 @@ class MafiaClan {
     if (name.isEmpty) {
       throw ArgumentError('Clan name cannot be empty!');
     }
-    if (boss.role != 'boss') {
+    if (boss.role != Role.boss) {
       throw ArgumentError('A clan must have a boss');
     }
     members.add(boss);
@@ -66,17 +64,17 @@ class MafiaClan {
 
 void main() {
   print("~MAKING CLANS~");
-  var northClan = MafiaClan('North London Clan', Mafiosnic('John', 'boss'));
-  northClan.addMember(Mafiosnic('Dale', 'member'));
-  northClan.addMember(Mafiosnic('Gena', 'member'));
-  northClan.addMember(Mafiosnic('Bob', 'member'));
-  northClan.addMember(Mafiosnic('Steve', 'member'));
+  var northClan = MafiaClan('North London Clan', Mafiosnic('John', Role.boss));
+  northClan.addMember(Mafiosnic('Dale', Role.member));
+  northClan.addMember(Mafiosnic('Gena', Role.member));
+  northClan.addMember(Mafiosnic('Bob', Role.member));
+  northClan.addMember(Mafiosnic('Steve', Role.member));
   northClan.shuffleMembers();
 
-  var southClan = MafiaClan('South London Clan', Mafiosnic('Mike', 'boss'));
-  southClan.addMember(Mafiosnic('Boris', 'member'));
-  southClan.addMember(Mafiosnic('Ashly', 'member'));
-  southClan.addMember(Mafiosnic('Drake', 'member'));
+  var southClan = MafiaClan('South London Clan', Mafiosnic('Mike', Role.boss));
+  southClan.addMember(Mafiosnic('Boris', Role.member));
+  southClan.addMember(Mafiosnic('Ashly', Role.member));
+  southClan.addMember(Mafiosnic('Drake', Role.member));
   southClan.shuffleMembers();
   print("---------------------------");
   print(northClan);
@@ -114,6 +112,7 @@ void main() {
   print(northClan);
   print(southClan);
 }
+
 
 
 // Мафія
