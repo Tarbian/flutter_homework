@@ -1,0 +1,8 @@
+name: Tests
+description: A program that make Tests.
+
+environment:
+  sdk: ">=2.16.0 <3.0.0"
+
+dependencies:
+  http: ^1.3.0
