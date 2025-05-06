@@ -1,4 +1,4 @@
-import '../entities/game_menu.dart';
+import '../presentation/game_menu.dart';
 
 void main() async {
   GameMenu menu = GameMenu();

@@ -1,5 +1,5 @@
-import '../entities/death_quote_generator.dart';
-import '../entities/news_generator.dart';
+import '../domain/entities/death_quote_generator.dart';
+import '../domain/entities/news_generator.dart';
 
 void main() async {
   final deathGen = DeathQuoteGenerator();
